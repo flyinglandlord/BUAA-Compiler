@@ -7,7 +7,9 @@ import middle.middle_code.element.MidCode;
 import middle.optimize.BasicBlock;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Function {
     private final String name;
@@ -109,5 +111,33 @@ public class Function {
 
     public List<BasicBlock> getBasicBlocks() {
         return basicBlocks;
+    }
+
+    private Map<Symbol, Integer> regMap = new HashMap<>();
+    private List<Integer> globalRegisters = new ArrayList<>();
+    private List<Integer> localRegisters = new ArrayList<>();
+
+    public Map<Symbol, Integer> getRegMap() {
+        return regMap;
+    }
+
+    public void setRegMap(Map<Symbol, Integer> regMap) {
+        this.regMap = regMap;
+    }
+
+    public List<Integer> getGlobalRegisters() {
+        return globalRegisters;
+    }
+
+    public void setGlobalRegisters(List<Integer> globalRegisters) {
+        this.globalRegisters = globalRegisters;
+    }
+
+    public List<Integer> getLocalRegisters() {
+        return localRegisters;
+    }
+
+    public void setLocalRegisters(List<Integer> localRegisters) {
+        this.localRegisters = localRegisters;
     }
 }

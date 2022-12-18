@@ -9,12 +9,15 @@ import java.util.*;
 // 可自由分配的寄存器：从 a2($6) 到 t9($25); v0($2) 作为函数返回值, v0($2) 也可用来存储一个立即数[upd:11/19], a0($4) 用于系统调用, a1($5)用于访存时计算偏移量
 public class RegisterMap {
     public static int regClockCount = 0;
-    private static final List<Integer> allocatableRegisters = Arrays.asList(
-            3, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 30
-            );
+    private List<Integer> allocatableRegisters = new ArrayList<>();
 
-    public static List<Integer> getAllocatableRegisters() {
+    public List<Integer> getAllocatableRegisters() {
         return allocatableRegisters;
+    }
+
+    public void setAllocatableRegisters(List<Integer> allocatableRegisters) {
+        this.allocatableRegisters = allocatableRegisters;
+        this.freeRegisters = new HashSet<>(allocatableRegisters);
     }
 
     public static final Map<Integer, String> id2regName = new HashMap<>();
@@ -54,7 +57,7 @@ public class RegisterMap {
     }
 
     // 当前未使用(可自由分配)的寄存器
-    private final Set<Integer> freeRegisters = new HashSet<>(allocatableRegisters);
+    private Set<Integer> freeRegisters = new HashSet<>(allocatableRegisters);
     // 已经分配出去的寄存器对应的符号
     private final Map<Integer, Symbol> allocatedRegisters = new HashMap<>();
     // 符号对应到寄存器

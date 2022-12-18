@@ -16,14 +16,18 @@ import middle.middle_code.element.*;
 import middle.middle_code.operand.ArrayPointer;
 import middle.middle_code.operand.Immediate;
 import middle.middle_code.operand.Operand;
+import middle.optimize.BasicBlock;
 import middle.symbol.Function;
 import middle.symbol.FunctionFormParam;
 import middle.symbol.Symbol;
 import middle.symbol.Variable;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static backend.RegisterMap.id2regName;
+import static middle.optimize.RegAllocator.getAllDef;
+import static middle.optimize.RegAllocator.getAllUse;
 
 public class Translator {
     private final MidCodeProgram midCodeProgram;
@@ -82,14 +86,14 @@ public class Translator {
     // load表示是否需要从内存加载曾经的值, not表示不能使用哪些寄存器（因为有可能有两个运算数，你其中一个把另外一个换走了，这就错了）
     private int getNextAvailableRegister(int... not) {
         RegisterMap.regClockCount++;
-        if (not.length == 0) return RegisterMap.regClockCount % registerMap.getAllocatedRegisters().size();
+        if (not.length == 0) return RegisterMap.regClockCount % registerMap.getAllocatableRegisters().size();
         else {
             while(true) {
                 boolean ok = true;
                 for (int notReg : not) {
-                    if (notReg == RegisterMap
+                    if (notReg == registerMap
                             .getAllocatableRegisters()
-                            .get(RegisterMap.regClockCount % registerMap.getAllocatedRegisters().size())) {
+                            .get(RegisterMap.regClockCount % registerMap.getAllocatableRegisters().size())) {
                         ok = false;
                         break;
                     }
@@ -97,10 +101,10 @@ public class Translator {
                 if (ok) break;
                 else RegisterMap.regClockCount++;
             }
-            return RegisterMap.regClockCount % registerMap.getAllocatedRegisters().size();
+            return RegisterMap.regClockCount % registerMap.getAllocatableRegisters().size();
         }
     }
-    private int allocRegister(Symbol symbol, boolean load, int... not) {
+    private int allocTempRegister(Symbol symbol, boolean load, int... not) {
         if (registerMap.isAllocated(symbol)) {
             hit++;
             return registerMap.getRegisterOfSymbol(symbol);
@@ -110,7 +114,7 @@ public class Translator {
         if (!registerMap.hasFreeRegister()) {
             shift++;
             // 寄存器池已满，需要置换掉一个寄存器
-            int register = RegisterMap.getAllocatableRegisters().get(getNextAvailableRegister(not));
+            int register = registerMap.getAllocatableRegisters().get(getNextAvailableRegister(not));
             // System.out.println(register);
             Symbol var = registerMap.getSymbolOfRegister(register);
             // 将该变量存储进内存
@@ -139,8 +143,8 @@ public class Translator {
         return register;
     }
 
-    public void saveRegisters() {
-        for (int register : RegisterMap.getAllocatableRegisters()) {
+    public void saveTempRegisters() {
+        for (int register : registerMap.getAllocatableRegisters()) {
             if (registerMap.isAllocated(register)) {
                 Symbol symbol = registerMap.getSymbolOfRegister(register);
                 if (symbol.isGlobal()) {
@@ -160,8 +164,63 @@ public class Translator {
         }
     }
 
-    public void clearRegisters() {
-        for (int register : RegisterMap.getAllocatableRegisters()) {
+    private int allocGlobalRegister(Symbol symbol) {
+        allocatedGlobalRegisters.put(currentFunction.getRegMap().get(symbol), symbol);
+        return currentFunction.getRegMap().get(symbol);
+    }
+
+    private Set<Symbol> activeOutOfCode(MidCode target) {
+        for (BasicBlock block : currentFunction.getBasicBlocks()) {
+            if (!block.getBlock().getMidCodeList().contains(target)) continue;
+            final Set<Symbol> out = new HashSet<>(block.getOut_live());
+            for (int i = block.getBlock().size()-1; i >= 0; --i) {
+                MidCode code = block.getBlock().get(i);
+                final Symbol def = getAllDef(code);
+                if (def != null && !def.isGlobal()) {
+                    out.remove(def);
+                }
+                if (code.equals(target)) break;
+                out.addAll(getAllUse(code).stream()
+                        .filter(symbol -> !symbol.isGlobal())
+                        .collect(Collectors.toSet()));
+            }
+            return out;
+        }
+        return Collections.emptySet();
+    }
+
+    private final Map<Integer, Symbol> allocatedGlobalRegisters = new HashMap<>();
+
+    // 只会在调用函数前保存全局寄存器
+    public void saveGlobalRegisters(MidCode code) {
+        final Set<Symbol> out = activeOutOfCode(code);
+        for (Map.Entry<Integer, Symbol> entry : allocatedGlobalRegisters.entrySet()) {
+            Symbol symbol = entry.getValue();
+            int register = entry.getKey();
+            if (out.contains(symbol))
+                text.add(new Sw(id2regName.get(register), String.valueOf(symbol.getAddress()), "$sp"));
+        }
+    }
+
+    public void restoreGlobalRegisters(MidCode code) {
+        final Set<Symbol> out = activeOutOfCode(code);
+        for (Map.Entry<Integer, Symbol> entry : allocatedGlobalRegisters.entrySet()) {
+            Symbol symbol = entry.getValue();
+            int register = entry.getKey();
+            if (out.contains(symbol))
+                text.add(new Lw(id2regName.get(register), String.valueOf(symbol.getAddress()), "$sp"));
+        }
+    }
+
+    private int allocRegister(Symbol symbol, boolean load, int... not) {
+        if (!currentFunction.getRegMap().containsKey(symbol))
+            return allocTempRegister(symbol, load, not);
+        else
+            return allocGlobalRegister(symbol);
+    }
+
+    public void clearTempRegisters() {
+        for (int register : registerMap.getAllocatableRegisters()) {
             if (registerMap.isAllocated(register)) {
                 dirty[register] = false;
                 registerMap.cancelAssignRegister(register);
@@ -300,13 +359,17 @@ public class Translator {
         text.add(new ArithI(ArithI.Type.addiu, "$gp", "$gp", globalVariableSize));
         for (MidCode i : midCodeProgram.getGlobalVarDeclCode().getMidCodeList()) {
             if (i instanceof DeclareVar) {
+                if (((DeclareVar) i).getType() == DeclareVar.Type.CONST_DEF) continue;
                 translateDeclareVar((DeclareVar) i);
             }
         }
     }
 
     public void translateFunction(Function function) {
-        clearRegisters();
+        clearTempRegisters();
+        registerMap.setAllocatableRegisters(function.getLocalRegisters());
+        allocatedGlobalRegisters.clear();
+        RegisterMap.regClockCount = 0;
         currentFunction = function;
         // mipsCode.append(function.getName()).append(":").append("\n");
         for (int i = 0; i < function.getBody().getMidCodeList().size(); i++) {
@@ -868,7 +931,7 @@ public class Translator {
             }
         } else {
             if (code.getInitValue() == null) {
-                //allocRegister(code.getVar(), false);
+                allocRegister(code.getVar(), false);
             } else {
                 if (code.getInitValue() instanceof Immediate) {
                     int immediate = ((Immediate) code.getInitValue()).getValue();
@@ -948,7 +1011,7 @@ public class Translator {
 
     public int translateCall(int id, Function function) {
         // 将$ra压栈
-        text.add(new Sw("$ra", "-4", "$sp"));
+        if (!currentFunction.getName().equals("main")) text.add(new Sw("$ra", "-4", "$sp"));
         id++;
         int i = 0;
         // 将参数压栈
@@ -1029,20 +1092,22 @@ public class Translator {
             Call code = (Call) currentFunction.getBody().get(id);
             text.add(new Comment(code.toString()));
             // 将所有使用的寄存器保存
-            saveRegisters();
+            saveTempRegisters();
             // 取消所有的寄存器分配
-            clearRegisters();
+            clearTempRegisters();
+            saveGlobalRegisters(code);
             // 移动$sp指针
             text.add(new ArithI(ArithI.Type.addiu, "$sp", "$sp", -function.getStackSize() - 4));
             /*mipsCode.append("\t").append("addiu $sp, $sp, ")
                 .append(-function.getStackSize() - 4).append("\n");*/
             // 调用函数
             text.add(new Jal(function.getName()));
-            clearRegisters();
+            clearTempRegisters();
             // 恢复$sp寄存器
             text.add(new ArithI(ArithI.Type.addiu, "$sp", "$sp", function.getStackSize() + 4));
+            restoreGlobalRegisters(code);
             // 恢复$ra寄存器
-            text.add(new Lw("$ra", "-4", "$sp"));
+            if (!currentFunction.getName().equals("main")) text.add(new Lw("$ra", "-4", "$sp"));
             // 存返回值
             if (code.getRet() != null) {
                 int regRet = allocRegister((Symbol) code.getRet(), false);
@@ -1061,7 +1126,7 @@ public class Translator {
 
     public void translateBranch(Branch code) {
         if (code.getCond() instanceof Immediate) {
-            saveRegisters();
+            saveTempRegisters();
             int val = ((Immediate) code.getCond()).getValue();
             switch (code.getType()) {
                 case EQ:
@@ -1086,7 +1151,7 @@ public class Translator {
         } else {
             int regCond = allocRegister((Symbol) code.getCond(), true);
             consumeTempVar((Symbol) code.getCond());
-            saveRegisters();
+            saveTempRegisters();
             /*Symbol symbol = (Symbol) code.getCond();
             if (symbol.isGlobal()) {
                 text.add(new Lw(id2regName.get(regCond), String.valueOf(symbol.getAddress()), "$gp"));
@@ -1116,12 +1181,12 @@ public class Translator {
                     break;
             }
         }
-        clearRegisters();
+        clearTempRegisters();
     }
 
     public void translateJump(Jump code) {
-        saveRegisters();
-        clearRegisters();
+        saveTempRegisters();
+        clearTempRegisters();
         text.add(new J(code.getTarget().getLabel()));
     }
 
@@ -1135,7 +1200,7 @@ public class Translator {
             regOp2 = allocRegister((Symbol) code.getOperand2(), true);
             consumeTempVar((Symbol) code.getOperand2());
         }
-        saveRegisters();
+        saveTempRegisters();
         switch(code.getType()) {
             case EQ:
                 text.add(new Beq(regOp1 != -1 ? id2regName.get(regOp1) : String.valueOf(((Immediate) code.getOperand1()).getValue()),
@@ -1150,7 +1215,19 @@ public class Translator {
             default:
                 throw new RuntimeException("unimplemented");
         }
-        clearRegisters();
+        clearTempRegisters();
+    }
+
+    public void translateParamDef(ParamDef code) {
+        Symbol symbol = code.getParam();
+        int register = allocRegister(code.getParam(), true);
+        if (currentFunction.getRegMap().containsKey(code.getParam())) {
+            if (symbol.isGlobal()) {
+                text.add(new Lw(id2regName.get(register), String.valueOf(symbol.getAddress()), "$gp"));
+            } else {
+                text.add(new Lw(id2regName.get(register), String.valueOf(symbol.getAddress()), "$sp"));
+            }
+        }
     }
 
     public void translate(MidCode code) {
@@ -1182,8 +1259,10 @@ public class Translator {
             translateLabel((Label) code);
         } else if (code instanceof Branch2Var) {
             translateBranch2Var((Branch2Var) code);
+        } else if (code instanceof ParamDef) {
+            translateParamDef((ParamDef) code);
         } else {
-                // throw new RuntimeException("Unknown MidCode type");
+            // throw new RuntimeException("Unknown MidCode type");
         }
         text.add(new Newline());
     }
