@@ -60,11 +60,11 @@ public class Compiler {
 
         Lexer codeLexer = new Lexer(rawCode);
         List<Token> tokenList = codeLexer.getTokenList();
-        //FileOutputStream grammar_out = new FileOutputStream("output.txt");
+        FileOutputStream grammar_out = new FileOutputStream("output.txt");
         FileOutputStream ir_out = new FileOutputStream("ir.txt");
         FileOutputStream ir_opt_out = new FileOutputStream("ir_opt.txt");
         FileOutputStream block_debug = new FileOutputStream("block.txt");
-        FileOutputStream error_out = new FileOutputStream("output.txt");
+        FileOutputStream error_out = new FileOutputStream("error.txt");
         FileOutputStream mips_out = new FileOutputStream("mips.txt");
         FileOutputStream block_opt_debug = new FileOutputStream("block_opt.txt");
         FileOutputStream reg_alloc_result = new FileOutputStream("reg.txt");
