@@ -78,17 +78,17 @@ public class FuncDefParser {
             Token ident = pickSpecifiedNextToken(tokenListIterator, Token.TokenType.IDENFR);
             Token leftParen = pickSpecifiedNextToken(tokenListIterator, Token.TokenType.LPARENT);
             Token rightParen = pickNotNullNextToken(tokenListIterator);
-            if (rightParen.getTokenType() == Token.TokenType.RPARENT) {
+            if (rightParen.getTokenType() == Token.TokenType.RPARENT) {     // 无参数的函数定义
                 Token leftBrace = pickSpecifiedNextToken(tokenListIterator, Token.TokenType.LBRACE);
                 Block block = new StmtParser(tokenListIterator, errorTable).parseBlock(leftBrace);
                 return new FuncDef(new FuncType(funcType), ident, leftParen, rightParen, block);
-            } else if (rightParen.getTokenType() == Token.TokenType.LBRACE) {
+            } else if (rightParen.getTokenType() == Token.TokenType.LBRACE) {       // 无参数的函数定义，缺少右括号')'
                 tokenListIterator.previous();
                 errorTable.add(new Error(Error.ErrorType.MISSING_RIGHT_PARENT, leftParen.getLinenumber()));
                 Token leftBrace = pickSpecifiedNextToken(tokenListIterator, Token.TokenType.LBRACE);
                 Block block = new StmtParser(tokenListIterator, errorTable).parseBlock(leftBrace);
                 return new FuncDef(new FuncType(funcType), ident, leftParen, null, block);
-            } else {
+            } else {        // 有参数的函数定义
                 tokenListIterator.previous();
                 FuncFParams funcFParams = parseFuncFParams();
                 rightParen = pickSpecifiedTokenOrNull(tokenListIterator, Token.TokenType.RPARENT);
@@ -132,7 +132,7 @@ public class FuncDefParser {
                 Token rightBracket = pickNotNullNextToken(tokenListIterator);
                 ConstExp constExp = null;
                 if (rightBracket.getTokenType() == Token.TokenType.RPARENT ||
-                        rightBracket.getTokenType() == Token.TokenType.COMMA) {
+                        rightBracket.getTokenType() == Token.TokenType.COMMA) {     // 缺少了一个右中括号']'
                     tokenListIterator.previous();
                     addMissingRightBracketError();
                     subscripts.add(new FuncFParamArrayDef(token, null));

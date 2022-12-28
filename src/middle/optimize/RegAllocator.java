@@ -45,7 +45,8 @@ public class RegAllocator {
             return Collections.singletonList((Symbol) ((UnaryOp) code).getOperand1());
         } else if (code instanceof LoadSave) {
             if (((LoadSave) code).getOp() == LoadSave.Op.LOAD) {
-                if (((LoadSave) code).getOffset() instanceof Symbol) return Collections.singletonList((Symbol) ((LoadSave) code).getOffset());
+                if (((LoadSave) code).getOffset() instanceof Symbol)
+                    return Collections.singletonList((Symbol) ((LoadSave) code).getOffset());
             } else if (((LoadSave) code).getOp() == LoadSave.Op.STORE) {
                 if (((LoadSave) code).getOffset() instanceof Symbol) ans.add((Symbol) ((LoadSave) code).getOffset());
                 if (((LoadSave) code).getSrc() instanceof Symbol) ans.add((Symbol) ((LoadSave) code).getSrc());
@@ -62,15 +63,19 @@ public class RegAllocator {
                 }
             }
         } else if (code instanceof Branch) {
-            if (((Branch) code).getCond() instanceof Symbol) return Collections.singletonList((Symbol) ((Branch) code).getCond());
+            if (((Branch) code).getCond() instanceof Symbol)
+                return Collections.singletonList((Symbol) ((Branch) code).getCond());
         } else if (code instanceof Print) {
             if (((Print) code).getSrc() instanceof Symbol && !((Symbol) ((Print) code).getSrc()).isString())
                 return Collections.singletonList((Symbol) ((Print) code).getSrc());
         } else if (code instanceof Return) {
-            if (((Return) code).getValue() instanceof Symbol) return Collections.singletonList((Symbol) ((Return) code).getValue());
+            if (((Return) code).getValue() instanceof Symbol)
+                return Collections.singletonList((Symbol) ((Return) code).getValue());
         } else if (code instanceof Branch2Var) {
-            if (((Branch2Var) code).getOperand1() instanceof Symbol) ans.add((Symbol) ((Branch2Var) code).getOperand1());
-            if (((Branch2Var) code).getOperand2() instanceof Symbol) ans.add((Symbol) ((Branch2Var) code).getOperand2());
+            if (((Branch2Var) code).getOperand1() instanceof Symbol)
+                ans.add((Symbol) ((Branch2Var) code).getOperand1());
+            if (((Branch2Var) code).getOperand2() instanceof Symbol)
+                ans.add((Symbol) ((Branch2Var) code).getOperand2());
         }
         return ans;
     }
@@ -134,32 +139,19 @@ public class RegAllocator {
         this.program = program;
     }
 
-    public void run() {
-        prepare();
-        int count = 0;
-        for (Function function : program.getFunctionTable().values()) {
-            for (BasicBlock block : function.getBasicBlocks()) {
-                for (MidCode code : block.getBlock().getMidCodeList()) {
-                    if (code instanceof BinaryOp &&
-                            (((BinaryOp) code).getOp() == BinaryOp.Op.DIV || ((BinaryOp) code).getOp() == BinaryOp.Op.MUL) &&
-                            ((BinaryOp) code).getOperand2() instanceof Immediate &&
-                            ((Immediate) ((BinaryOp) code).getOperand2()).getValue() == 2) {
-                        count++;
-                    }
-                }
-            }
-        }
-        final boolean opt = count > 1;
-        program.getFunctionTable().values().forEach(function -> {
-            conflictGraph.clear();
-            buildConflictGraph(function);
-            //allocateSimple(function);
-            if (opt) {
-                allocateSimple(function);
-            } else {
+    public void run(boolean optimize) {
+        if (optimize) {
+            prepare();
+            program.getFunctionTable().values().forEach(function -> {
+                conflictGraph.clear();
+                buildConflictGraph(function);
                 allocateSSA(function);
-            }
-        });
+            });
+        } else {
+            program.getFunctionTable().values().forEach(function -> {
+                allocateSimple(function);
+            });
+        }
     }
 
     public void prepare() {
@@ -170,9 +162,16 @@ public class RegAllocator {
     }
 
     public void buildConflictGraph(Function function) {
+        for (Symbol symbol1 : function.getParamList()) {
+            for (Symbol symbol2 : function.getParamList()) {
+                if (symbol1 != symbol2 && !symbol1.isArray() && !symbol2.isArray()) {
+                    conflictGraph.addEdge(symbol1, symbol2);
+                }
+            }
+        }
         for (BasicBlock block : function.getBasicBlocks()) {
             final Set<Symbol> out = new HashSet<>(block.getOut_live());
-            for (int i = block.getBlock().size()-1; i >= 0; --i) {
+            for (int i = block.getBlock().size() - 1; i >= 0; --i) {
                 MidCode code = block.getBlock().get(i);
                 final Symbol def = getAllDef(code);
 
@@ -187,9 +186,12 @@ public class RegAllocator {
                 }
 
                 if (def != null && code instanceof BinaryOp &&
-                                ((BinaryOp) code).getOp() == BinaryOp.Op.MOD) {
+                        ((BinaryOp) code).getOp() == BinaryOp.Op.MOD) {
                     if (((BinaryOp) code).getOperand2() instanceof Immediate &&
-                            ((BinaryOp) code).getOperand1() instanceof Symbol) {
+                            ((BinaryOp) code).getOperand1() instanceof Symbol &&
+                            !((Symbol) ((BinaryOp) code).getOperand1()).isGlobal() &&
+                            !((Symbol) ((BinaryOp) code).getOperand1()).isArray() &&
+                            !def.isGlobal() && !def.isArray()) {
                         conflictGraph.addEdge(def, (Symbol) ((BinaryOp) code).getOperand1());
                     }
                 }
@@ -219,8 +221,8 @@ public class RegAllocator {
         final HashMap<Symbol, Integer> vertices2Id = new HashMap<>();
         for (Symbol symbol : conflictGraph.keySet()) {
             cnt++;
-            id2vertices.put(n-cnt+1, symbol);
-            vertices2Id.put(symbol, n-cnt+1);
+            id2vertices.put(n - cnt + 1, symbol);
+            vertices2Id.put(symbol, n - cnt + 1);
         }
 
         int[] order = new int[cnt + 1], h = new int[cnt + 1];

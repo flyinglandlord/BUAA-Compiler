@@ -45,28 +45,16 @@ public class BranchToBranch2Var {
                 } else if (first instanceof BinaryOp &&
                         ((BinaryOp) first).getOperand2() instanceof Immediate &&
                         ((Immediate) ((BinaryOp) first).getOperand2()).getValue() == 0 &&
-                        second instanceof Branch) {
+                        second instanceof Branch &&
+                        ((BinaryOp) first).getDst().equals(((Branch) second).getCond()) &&
+                        ((BinaryOp) first).getDst().isTemp()) {
                     BinaryOp binaryOp = (BinaryOp) first;
                     Branch branch = (Branch) second;
                     if (binaryOp.getDst().equals(branch.getCond()) && binaryOp.getDst().isTemp()) {
-                        System.out.println("here " + binaryOp);
                         if (branch.getType() == Branch.Type.EQ) {
                             doReplace_reverse(i, binaryOp, branch, block, binaryOp.getOperand1());
                         } else if (branch.getType() == Branch.Type.NE) {
                             doReplace(i, binaryOp, branch, block, binaryOp.getOperand1());
-                        }
-                    }
-                } else if (first instanceof BinaryOp &&
-                        ((BinaryOp) first).getOperand1() instanceof Immediate &&
-                        ((Immediate) ((BinaryOp) first).getOperand1()).getValue() == 0 &&
-                        second instanceof Branch) {
-                    BinaryOp binaryOp = (BinaryOp) first;
-                    Branch branch = (Branch) second;
-                    if (binaryOp.getDst().equals(branch.getCond()) && binaryOp.getDst().isTemp()) {
-                        if (branch.getType() == Branch.Type.EQ) {
-                            doReplace_reverse(i, binaryOp, branch, block, binaryOp.getOperand2());
-                        } else if (branch.getType() == Branch.Type.NE) {
-                            doReplace(i, binaryOp, branch, block, binaryOp.getOperand2());
                         }
                     }
                 }
@@ -75,6 +63,7 @@ public class BranchToBranch2Var {
     }
 
     private void doReplace(int i, BinaryOp binaryOp, Branch branch, BasicBlock block, Operand var) {
+        System.out.println("BranchToBranch2Var: " + binaryOp + " -> " + branch);
         switch (binaryOp.getOp()) {
             case EQ:
                 block.getBlock().replace(i, new Branch(
@@ -116,6 +105,7 @@ public class BranchToBranch2Var {
     }
 
     private void doReplace_reverse(int i, BinaryOp binaryOp, Branch branch, BasicBlock block, Operand var) {
+        System.out.println("BranchToBranch2Var Reverse: " + binaryOp + " -> " + branch);
         switch (binaryOp.getOp()) {
             case EQ:
                 block.getBlock().replace(i, new Branch(

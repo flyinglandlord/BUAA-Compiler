@@ -294,7 +294,7 @@ public class Visitor {
                     // 一维数组
                     if (shape.size() == 1) {
                         List<ExpInitVar> expInitVars = new ArrayList<>();
-                        expInitVars.add((ExpInitVar) arrayInitVar.getFirst());
+                        if (arrayInitVar.getFirst() != null) expInitVars.add((ExpInitVar) arrayInitVar.getFirst());
                         for (InitVal i : arrayInitVar.getRest()) {
                             expInitVars.add((ExpInitVar) i);
                         }
@@ -561,16 +561,14 @@ public class Visitor {
         if (loopStmt.isEmpty()) {
             errorTable.add(new Error(Error.ErrorType.CONTROL_OUTSIDE_LOOP,
                     stmt.getBreakToken().getLinenumber()));
-        }
-        currentMidCodeList.addMidCode(new Jump(loopBreakLabel.peek()));
+        } else currentMidCodeList.addMidCode(new Jump(loopBreakLabel.peek()));
     }
 
     public void analyseContinueStmt(ContinueStmt stmt) {
         if (loopStmt.isEmpty()) {
             errorTable.add(new Error(Error.ErrorType.CONTROL_OUTSIDE_LOOP,
                     stmt.getContinueToken().getLinenumber()));
-        }
-        currentMidCodeList.addMidCode(new Jump(loopContinueLabel.peek()));
+        } else currentMidCodeList.addMidCode(new Jump(loopContinueLabel.peek()));
     }
 
     public void analyseAssignStmt(AssignStmt stmt) {

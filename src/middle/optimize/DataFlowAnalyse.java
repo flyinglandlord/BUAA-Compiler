@@ -167,7 +167,7 @@ public class DataFlowAnalyse {
         } else if (code instanceof Call) {
             if (((Call) code).getRet() != null) return (Symbol) ((Call) code).getRet();
         } else if (code instanceof ParamDef) {
-            return ((ParamDef) code).getParam();
+            if (!((ParamDef) code).getParam().isArray()) return ((ParamDef) code).getParam();
         }
         return null;
     }
@@ -320,9 +320,9 @@ public class DataFlowAnalyse {
                                 }
                             }
                         }
-                        System.out.println("==========");
+                        /*System.out.println("==========");
                         System.out.println(code);
-                        System.out.println(reach);
+                        System.out.println(reach);*/
                         if (reach.size() == 1) {
                             MidCode curCode = function.getCode(reach.get(0).getFirst(), reach.get(0).getSecond());
                             Operand value = null;
@@ -330,9 +330,9 @@ public class DataFlowAnalyse {
                             else if (curCode instanceof UnaryOp
                                     && ((UnaryOp) curCode).getOp() == UnaryOp.Op.MOV)
                                 value = ((UnaryOp) curCode).getOperand1();
-                            System.out.println(reach.get(0));
+                            /*System.out.println(reach.get(0));
                             System.out.println(curCode);
-                            System.out.println(value);
+                            System.out.println(value);*/
                             if (use.get(0).isArray() || use.get(0).isGlobal()) continue;
                             if (value == null) continue;
                             if (value instanceof Immediate) {  // 立即数
@@ -607,10 +607,10 @@ public class DataFlowAnalyse {
                     MidCode code = block.getBlock().getMidCodeList().get(i);
                     // 检查右值：右值最近的定义点不能位于循环内部，但是可以是已经被提取出来的部分
                     boolean ok = true;
-                    System.out.println("==={code}===: " + code);
+                    /*System.out.println("==={code}===: " + code);
                     reach.getOrDefault(code, Collections.emptyList()).forEach((pair1) -> {
                         System.out.println(function.getCode(pair1.getFirst(), pair1.getSecond()));
-                    });
+                    });*/
                     List<Symbol> rValue = getAllUse(code);
                     for (Symbol rVal : rValue) {
                         if (rVal.isConst()) continue;
@@ -626,7 +626,7 @@ public class DataFlowAnalyse {
                     }
                     if (!ok) continue;
                     // 检查左值：左值如果在循环中被使用，则必须由这句代码定义
-                    System.out.println("check def: " + code);
+                    //System.out.println("check def: " + code);
                     if (code instanceof Assign || code instanceof BinaryOp || code instanceof UnaryOp ||
                             (code instanceof LoadSave && ((LoadSave) code).getOp() == LoadSave.Op.STORE) ||
                             code instanceof DeclareVar) {
@@ -651,7 +651,7 @@ public class DataFlowAnalyse {
 
     public void optimize(boolean isOptimize, boolean isLoopOptimize) {
         midCodeProgram.getFunctionTable().values().forEach(function -> {
-            System.out.println(function.getName());
+            //System.out.println(function.getName());
             liveVariableAnalyse(function);
             reachDefAnalyse(function);
             if (isOptimize) {
