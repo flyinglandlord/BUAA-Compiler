@@ -11,7 +11,9 @@ public class Token {
         RETURNTK, PLUS, MINU, VOIDTK, MULT, DIV,
         MOD, LSS, LEQ, GRE, GEQ, EQL, NEQ, ASSIGN,
         SEMICN, COMMA, LPARENT, RPARENT, LBRACK,
-        RBRACK, LBRACE, RBRACE, ERR
+        RBRACK, LBRACE, RBRACE, ERR,
+        SELFADD, SELFSUB,
+        BITAND
     }
 
     public static final Map<String, TokenType> tokenMap = new HashMap<>();
@@ -51,6 +53,11 @@ public class Token {
         tokenMap.put("]", TokenType.RBRACK);
         tokenMap.put("{", TokenType.LBRACE);
         tokenMap.put("}", TokenType.RBRACE);
+        tokenMap.put("++", TokenType.SELFADD);
+        tokenMap.put("--", TokenType.SELFSUB);
+
+        // For exam
+        //tokenMap.put("bitand", TokenType.BITAND);
     }
 
     private final String content;

@@ -68,11 +68,29 @@ public class DeclParser {
     }
 
     // <VarDef> := Ident { '[' <ConstExp> ']' } | Ident { '[' <ConstExp> ']' } '=' <InitVal>
+    // <VarDef> := Ident '=' 'getint' '(' ')'
     public VarDef parseVarDef() {
         if (tokenListIterator.hasNext()) {
             Token ident = tokenListIterator.next();
             //System.out.println(ident);
             if (ident.getTokenType() == Token.TokenType.IDENFR) {
+                Token assignToken = tokenListIterator.next();
+                if (assignToken.getTokenType() == Token.TokenType.ASSIGN) {
+                    Token getintToken = tokenListIterator.next();
+                    if (getintToken.getTokenType() == Token.TokenType.GETINTTK) {
+                        Token leftParenthesis = tokenListIterator.next();
+                        if (leftParenthesis.getTokenType() == Token.TokenType.LPARENT) {
+                            Token rightParenthesis = tokenListIterator.next();
+                            if (rightParenthesis.getTokenType() == Token.TokenType.RPARENT) {
+                                return new VarDef(ident, assignToken, getintToken);
+                            }
+                            tokenListIterator.previous();
+                        }
+                        tokenListIterator.previous();
+                    }
+                    tokenListIterator.previous();
+                }
+                tokenListIterator.previous();
                 List<ArraySubscriptDef> arraySubscriptDefs = new ArrayList<>();
                 while(tokenListIterator.hasNext()) {
                     Token token = tokenListIterator.next();
@@ -83,7 +101,7 @@ public class DeclParser {
                         break;
                     }
                 }
-                Token assignToken = tokenListIterator.next();
+                assignToken = tokenListIterator.next();
                 if (assignToken.getTokenType() == Token.TokenType.ASSIGN) {
                     InitVal initVal = parseInitVal();
                     return new VarDef(ident, arraySubscriptDefs, assignToken, initVal);

@@ -554,6 +554,8 @@ public class Translator {
                 return Collections.singletonList(new ArithI(ArithI.Type.seq, regDst, regSrc1, imm));
             case NE:
                 return Collections.singletonList(new ArithI(ArithI.Type.sne, regDst, regSrc1, imm));
+            case AND:
+                return Collections.singletonList(new ArithI(ArithI.Type.andi, regDst, regSrc1, imm));
             default:
                 throw new AssertionError("Bad BinaryOp");
         }
@@ -588,6 +590,8 @@ public class Translator {
                 return Collections.singletonList(new ArithR(ArithR.Type.seq, regDst, regSrc1, regSrc2));
             case NE:
                 return Collections.singletonList(new ArithR(ArithR.Type.sne, regDst, regSrc1, regSrc2));
+            case AND:
+                return Collections.singletonList(new ArithR(ArithR.Type.and, regDst, regSrc1, regSrc2));
             default:
                 throw new AssertionError("Bad BinaryOp");
         }
@@ -614,6 +618,7 @@ public class Translator {
                     case LT: result = (src1 < src2) ? 1 : 0; break;
                     case EQ: result = (src1 == src2) ? 1 : 0; break;
                     case NE: result = (src1 != src2) ? 1 : 0; break;
+                    case AND: result = src1 & src2; break;
                     default: throw new AssertionError("Bad BinaryOp");
                 }
                 text.add(new Li(id2regName.get(regDst), result));
@@ -622,7 +627,7 @@ public class Translator {
                 regDst = allocRegister(code.getDst(), false);
                 consumeTempVar((Symbol) code.getOperand2());
                 switch (code.getOp()) {
-                    case ADD: case EQ: case MUL:
+                    case ADD: case EQ: case MUL: case AND:
                         // 交换操作数
                         text.addAll(binaryOp2Mips(code.getOp(), id2regName.get(regDst), id2regName.get(regSrc2), ((Immediate) code.getOperand1()).getValue()));
                         break;

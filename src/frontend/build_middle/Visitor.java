@@ -215,7 +215,12 @@ public class Visitor {
             errorTable.add(new Error(Error.ErrorType.REDEFINED_IDENT, varDef.getIdent().getLinenumber()));
             return;
         }
-        if (varDef.getArrayDefs() == null || varDef.getArrayDefs().isEmpty()) {    // 不是数组定义
+        if (varDef.getGetIntToken() != null) {
+            Variable newVar = new Variable(varName, false);
+            currentMidCodeList.addMidCode(new DeclareVar(DeclareVar.Type.VAR_DEF, newVar));
+            currentSymbolTable.add(newVar);
+            currentMidCodeList.addMidCode(new GetInt((Symbol) newVar));
+        } else if (varDef.getArrayDefs() == null || varDef.getArrayDefs().isEmpty()) {    // 不是数组定义
             if (varDef.getAssignToken() != null && varDef.getInitVal() != null) {   // 被初始化
                 if (currentFunction == null) {      // 如果是全局变量定义，那么初始值一定可以计算出来
                     int initValue = new CalcExpr(currentSymbolTable, errorTable)
@@ -448,8 +453,44 @@ public class Visitor {
             analyseBlock(((BlockStmt) stmt).getBlock());
         } else if (stmt instanceof EmptyStmt) {
             // do nothing
+        } else if (stmt instanceof SelfAddStmt) {
+            analyseSelfAddStmt((SelfAddStmt) stmt);
+        } else if (stmt instanceof SelfSubStmt) {
+            analyseSelfSubStmt((SelfSubStmt) stmt);
         } else {
             throw new RuntimeException("Unknown Stmt type");
+        }
+    }
+
+    public void analyseSelfAddStmt(SelfAddStmt stmt) {
+        Operand dst = analysePrimaryExprBase(stmt.getlVal(), true);
+        if (dst instanceof ArrayItem) {
+            Symbol tmp = Symbol.tempSymbol();
+            currentMidCodeList.addMidCode(new LoadSave(LoadSave.Op.LOAD, ((ArrayItem) dst).getBase(),
+                    ((ArrayItem) dst).getOffset(), tmp));
+            currentMidCodeList.addMidCode(new BinaryOp(BinaryOp.Op.ADD, new Immediate(1), tmp, tmp));
+            currentMidCodeList.addMidCode(new LoadSave(LoadSave.Op.STORE, ((ArrayItem) dst).getBase(),
+                    ((ArrayItem) dst).getOffset(), tmp));
+        } else if (dst instanceof Symbol) {
+            Symbol tmp = Symbol.tempSymbol();
+            currentMidCodeList.addMidCode(new BinaryOp(BinaryOp.Op.ADD, new Immediate(1), (Symbol) dst, tmp));
+            currentMidCodeList.addMidCode(new Assign((Symbol) dst, tmp));
+        }
+    }
+
+    public void analyseSelfSubStmt(SelfSubStmt stmt) {
+        Operand dst = analysePrimaryExprBase(stmt.getlVal(), true);
+        if (dst instanceof ArrayItem) {
+            Symbol tmp = Symbol.tempSymbol();
+            currentMidCodeList.addMidCode(new LoadSave(LoadSave.Op.LOAD, ((ArrayItem) dst).getBase(),
+                    ((ArrayItem) dst).getOffset(), tmp));
+            currentMidCodeList.addMidCode(new BinaryOp(BinaryOp.Op.SUB, new Immediate(1), tmp, tmp));
+            currentMidCodeList.addMidCode(new LoadSave(LoadSave.Op.STORE, ((ArrayItem) dst).getBase(),
+                    ((ArrayItem) dst).getOffset(), tmp));
+        } else if (dst instanceof Symbol) {
+            Symbol tmp = Symbol.tempSymbol();
+            currentMidCodeList.addMidCode(new BinaryOp(BinaryOp.Op.SUB, new Immediate(1), (Symbol) dst, tmp));
+            currentMidCodeList.addMidCode(new Assign((Symbol) dst, tmp));
         }
     }
 
@@ -973,6 +1014,7 @@ public class Visitor {
             case LSS: return BinaryOp.Op.LT;
             case EQL: return BinaryOp.Op.EQ;
             case NEQ: return BinaryOp.Op.NE;
+            case BITAND: return BinaryOp.Op.AND;
             default: throw new RuntimeException("Unexpected token type: " + token.getTokenType());
         }
     }

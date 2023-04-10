@@ -66,7 +66,8 @@ public class ExprParser {
             Token token = tokenListIterator.next();
             if (token.getTokenType() == Token.TokenType.MULT ||
                     token.getTokenType() == Token.TokenType.DIV ||
-                    token.getTokenType() == Token.TokenType.MOD) {
+                    token.getTokenType() == Token.TokenType.MOD ||
+                    token.getTokenType() == Token.TokenType.BITAND) {
                 rest.add(parseUnaryExp());
                 linkOperator.add(token);
             } else {

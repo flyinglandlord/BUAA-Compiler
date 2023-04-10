@@ -65,10 +65,26 @@ public class Lexer {
                 tokenList.add(new Token(wordBuilder.toString(),
                         Token.tokenMap.getOrDefault(wordBuilder.toString(), Token.TokenType.IDENFR),
                         linenumber, -1));
-            } else if ("+-*%;,()[]{}".indexOf(rawCode.charAt(i)) != -1) {
+            } else if ("*%;,()[]{}".indexOf(rawCode.charAt(i)) != -1) {
                 tokenList.add(new Token(String.valueOf(rawCode.charAt(i)),
                         Token.tokenMap.get(String.valueOf(rawCode.charAt(i))), linenumber, -1));
                 i++;
+            } else if (rawCode.charAt(i) == '+') {
+                if (i+1 < rawCode.length() && rawCode.charAt(i+1) == '+') {
+                    tokenList.add(new Token("++", Token.TokenType.SELFADD, linenumber, -1));
+                    i += 2;
+                } else {
+                    tokenList.add(new Token("+", Token.TokenType.PLUS, linenumber, -1));
+                    i++;
+                }
+            } else if (rawCode.charAt(i) == '-') {
+                if (i+1 < rawCode.length() && rawCode.charAt(i+1) == '-') {
+                    tokenList.add(new Token("--", Token.TokenType.SELFADD, linenumber, -1));
+                    i += 2;
+                } else {
+                    tokenList.add(new Token("-", Token.TokenType.PLUS, linenumber, -1));
+                    i++;
+                }
             } else if (rawCode.charAt(i) == '/') {
                 if (i+1 < rawCode.length() && rawCode.charAt(i+1) == '/') {
                     while (rawCode.charAt(i) != '\n') i++;

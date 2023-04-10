@@ -61,6 +61,7 @@ public class CalcExpr {
                 case MULT: result = result * calcUnaryExp(unary); break;
                 case DIV: result = result / calcUnaryExp(unary); break;
                 case MOD: result = result % calcUnaryExp(unary); break;
+                case BITAND: result = result & calcUnaryExp(unary); break;
                 default: assert false;
             }
         }

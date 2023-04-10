@@ -303,6 +303,15 @@ public class StmtParser {
                 // 再看下一个token是不是等号
                 Token assignToken = tokenListIterator.next();
                 if (assignToken.getTokenType() != ASSIGN) {
+                    if (assignToken.getTokenType() == SELFADD) {
+                        Token semicolon = pickSpecifiedTokenOrNull(tokenListIterator, SEMICN);
+                        if (semicolon == null) addMissingSemicolonError();
+                        return new SelfAddStmt(lVal, assignToken, semicolon);
+                    } else if (assignToken.getTokenType() == SELFSUB) {
+                        Token semicolon = pickSpecifiedTokenOrNull(tokenListIterator, SEMICN);
+                        if (semicolon == null) addMissingSemicolonError();
+                        return new SelfSubStmt(lVal, assignToken, semicolon);
+                    }
                     tokenListIterator.previous();
                     Token semicolon = pickSpecifiedTokenOrNull(tokenListIterator, SEMICN);
                     if (semicolon == null) addMissingSemicolonError();

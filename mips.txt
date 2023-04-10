@@ -1,0 +1,38 @@
+.data
+
+
+
+.text
+	addiu $gp, $gp, 0
+	addiu $sp, $sp, -12
+	
+	# function main
+	# LABEL main:
+	main:
+	
+	# DECLARE_ARRAY arr@<1,1>[2]
+	
+	# arr@<1,1>[0] = 1
+	li $v0, 1
+	sw $v0, 0($sp)
+	
+	# arr@<1,1>[1] = 2
+	li $v0, 2
+	sw $v0, 4($sp)
+	
+	# #T0 = arr@<1,1>[1]
+	# Alloc register: $v1 for #T0
+	lw $v1, 4($sp)
+	
+	# PRINT #T0
+	# Free register: $v1 for #T0
+	move $a0, $v1
+	li $v0, 1
+	syscall
+	
+	# RETURN 0
+	li $v0, 10
+	syscall
+	
+	jr $ra
+

@@ -9,6 +9,7 @@ public class BinaryOp extends MidCode {
         ADD, SUB, MUL, DIV, MOD,
         GE, GT, LE, LT, EQ, NE,
         SLL, SRL, SRA,
+        AND,
     }
     private final Op op;
     private final Operand operand1;
