@@ -1,0 +1,1013 @@
+.data
+STRING__STR0:
+	.asciiz "\n"
+STRING__STR1:
+	.asciiz "\n"
+STRING__STR2:
+	.asciiz "\n"
+STRING__STR4:
+	.asciiz "\n"
+STRING__STR3:
+	.asciiz "\n"
+
+
+
+.text
+	addiu $gp, $gp, 12
+	li $v0, 1
+	sw $v0, -12($gp)
+	addiu $sp, $sp, -164
+	
+	# function main
+	# LABEL main:
+	main:
+	
+	# DECLARE_VAR x@<1,5>
+	
+	# x@<1,5> = GETINT
+	li $v0, 5
+	syscall
+	move $t0, $v0
+	
+	# JUMP COND_33
+	
+	# LABEL COND_33:
+	COND_33:
+	
+	# #T33 = x@<1,5> MOD 100005
+	li $v0, -1480358259
+	mult $t0, $v0
+	mfhi $v0
+	addu $v0, $v0, $t0
+	sra $a1, $v0, 16
+	sra $v0, $t0, 31
+	subu $a2, $a1, $v0
+	mul $a2, $a2, 100005
+	subu $a2, $t0, $a2
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T34
+	sw $a2, 4($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $a2, 4($sp)
+	lw $t0, 0($sp)
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T35
+	sw $v1, 16($sp)
+	sw $a2, 4($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	lw $v1, 16($sp)
+	lw $a2, 4($sp)
+	lw $t0, 0($sp)
+	move $a3, $v0
+	
+	# END CALL fAlse
+	
+	# #T36 = #T34 ADD #T35
+	addu $v1, $v1, $a3
+	
+	# #T37 = #T33 LT #T36
+	slt $v1, $a2, $v1
+	
+	# BRANCH EQ END_WHILE_37 #T37
+	beq $v1, $zero, END_WHILE_37
+	
+	# LABEL END_COND_34:
+	END_COND_34:
+	
+	# JUMP LOOP_BODY_35
+	
+	# LABEL LOOP_BODY_35:
+	LOOP_BODY_35:
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T38
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $t0, 0($sp)
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# PRINT #T38
+	move $a0, $v1
+	li $v0, 1
+	syscall
+	
+	# PRINT _STR1
+	la $a0, STRING__STR1
+	li $v0, 4
+	syscall
+	
+	# x@<1,5> = x@<1,5> ADD 100
+	addiu $t0, $t0, 100
+	
+	# JUMP COND_38
+	
+	# LABEL COND_38:
+	COND_38:
+	
+	# #T40 = x@<1,5> DIV 100005
+	li $v0, -1480358259
+	mult $t0, $v0
+	mfhi $v0
+	addu $v0, $v0, $t0
+	sra $a1, $v0, 16
+	sra $v0, $t0, 31
+	subu $v1, $a1, $v0
+	
+	# #T41 = #T40 ADD 100005
+	addiu $v1, $v1, 100005
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T42
+	sw $v1, 92($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $v1, 92($sp)
+	lw $t0, 0($sp)
+	move $a3, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T43
+	sw $v1, 92($sp)
+	sw $a3, 84($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	lw $v1, 92($sp)
+	lw $a3, 84($sp)
+	lw $t0, 0($sp)
+	move $a2, $v0
+	
+	# END CALL fAlse
+	
+	# #T44 = #T42 ADD #T43
+	addu $a2, $a3, $a2
+	
+	# #T45 = #T41 LT #T44
+	slt $v1, $v1, $a2
+	
+	# BRANCH EQ END_WHILE_42 #T45
+	beq $v1, $zero, END_WHILE_42
+	
+	# LABEL END_COND_39:
+	END_COND_39:
+	
+	# JUMP LOOP_BODY_40
+	
+	# LABEL LOOP_BODY_40:
+	LOOP_BODY_40:
+	
+	# x@<1,5> = x@<1,5> SUB 1
+	addiu $t0, $t0, -1
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T47
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $t0, 0($sp)
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# #T48 = #T47 ADD x@<1,5>
+	addu $v1, $v1, $t0
+	
+	# PRINT #T48
+	move $a0, $v1
+	li $v0, 1
+	syscall
+	
+	# PRINT _STR2
+	la $a0, STRING__STR2
+	li $v0, 4
+	syscall
+	
+	# JUMP COND_43
+	
+	# LABEL COND_43:
+	COND_43:
+	
+	# #T49 = x@<1,5> DIV 100005
+	li $v0, -1480358259
+	mult $t0, $v0
+	mfhi $v0
+	addu $v0, $v0, $t0
+	sra $a1, $v0, 16
+	sra $v0, $t0, 31
+	subu $v1, $a1, $v0
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T50
+	sw $v1, 124($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $v1, 124($sp)
+	lw $t0, 0($sp)
+	move $a2, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T51
+	sw $v1, 124($sp)
+	sw $a2, 136($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	lw $v1, 124($sp)
+	lw $a2, 136($sp)
+	lw $t0, 0($sp)
+	move $a3, $v0
+	
+	# END CALL fAlse
+	
+	# #T52 = #T50 ADD #T51
+	addu $a2, $a2, $a3
+	
+	# #T53 = #T49 LT #T52
+	slt $v1, $v1, $a2
+	
+	# BRANCH EQ END_WHILE_47 #T53
+	beq $v1, $zero, END_WHILE_47
+	
+	# LABEL END_COND_44:
+	END_COND_44:
+	
+	# JUMP LOOP_BODY_45
+	
+	# LABEL LOOP_BODY_45:
+	LOOP_BODY_45:
+	
+	# x@<1,5> = x@<1,5> SUB 1
+	addiu $t0, $t0, -1
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T55
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $t0, 0($sp)
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# #T56 = #T55 ADD x@<1,5>
+	addu $v1, $v1, $t0
+	
+	# PRINT #T56
+	move $a0, $v1
+	li $v0, 1
+	syscall
+	
+	# PRINT _STR3
+	la $a0, STRING__STR3
+	li $v0, 4
+	syscall
+	
+	# JUMP WHILE_46
+	
+	# LABEL WHILE_46:
+	WHILE_46:
+	
+	# #T57 = x@<1,5> DIV 100005
+	li $v0, -1480358259
+	mult $t0, $v0
+	mfhi $v0
+	addu $v0, $v0, $t0
+	sra $a1, $v0, 16
+	sra $v0, $t0, 31
+	subu $a2, $a1, $v0
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T58
+	sw $a2, 104($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $a2, 104($sp)
+	lw $t0, 0($sp)
+	move $a3, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T59
+	sw $a2, 104($sp)
+	sw $a3, 120($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	lw $a2, 104($sp)
+	lw $a3, 120($sp)
+	lw $t0, 0($sp)
+	move $v1, $v0
+	
+	# END CALL fAlse
+	
+	# #T60 = #T58 ADD #T59
+	addu $v1, $a3, $v1
+	
+	# #T61 = #T57 LT #T60
+	slt $v1, $a2, $v1
+	
+	# BRANCH NE LOOP_BODY_45 #T61
+	bne $v1, $zero, LOOP_BODY_45
+	
+	# LABEL END_WHILE_47:
+	END_WHILE_47:
+	
+	# JUMP WHILE_41
+	
+	# LABEL WHILE_41:
+	WHILE_41:
+	
+	# #T62 = x@<1,5> DIV 100005
+	li $v0, -1480358259
+	mult $t0, $v0
+	mfhi $v0
+	addu $v0, $v0, $t0
+	sra $a1, $v0, 16
+	sra $v0, $t0, 31
+	subu $v1, $a1, $v0
+	
+	# #T63 = #T62 ADD 100005
+	addiu $a2, $v1, 100005
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T64
+	sw $a2, 96($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $a2, 96($sp)
+	lw $t0, 0($sp)
+	move $a3, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T65
+	sw $a2, 96($sp)
+	sw $a3, 88($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	lw $a2, 96($sp)
+	lw $a3, 88($sp)
+	lw $t0, 0($sp)
+	move $v1, $v0
+	
+	# END CALL fAlse
+	
+	# #T66 = #T64 ADD #T65
+	addu $v1, $a3, $v1
+	
+	# #T67 = #T63 LT #T66
+	slt $v1, $a2, $v1
+	
+	# BRANCH NE LOOP_BODY_40 #T67
+	bne $v1, $zero, LOOP_BODY_40
+	
+	# LABEL END_WHILE_42:
+	END_WHILE_42:
+	
+	# JUMP WHILE_36
+	
+	# LABEL WHILE_36:
+	WHILE_36:
+	
+	# #T68 = x@<1,5> MOD 100005
+	li $v0, -1480358259
+	mult $t0, $v0
+	mfhi $v0
+	addu $v0, $v0, $t0
+	sra $a1, $v0, 16
+	sra $v0, $t0, 31
+	subu $a2, $a1, $v0
+	mul $a2, $a2, 100005
+	subu $a2, $t0, $a2
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T69
+	sw $a2, 12($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $a2, 12($sp)
+	lw $t0, 0($sp)
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T70
+	sw $v1, 28($sp)
+	sw $a2, 12($sp)
+	sw $t0, 0($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	lw $v1, 28($sp)
+	lw $a2, 12($sp)
+	lw $t0, 0($sp)
+	move $a3, $v0
+	
+	# END CALL fAlse
+	
+	# #T71 = #T69 ADD #T70
+	addu $v1, $v1, $a3
+	
+	# #T72 = #T68 LT #T71
+	slt $v1, $a2, $v1
+	
+	# BRANCH NE LOOP_BODY_35 #T72
+	bne $v1, $zero, LOOP_BODY_35
+	
+	# LABEL END_WHILE_37:
+	END_WHILE_37:
+	
+	# PRINT x@<1,5>
+	move $a0, $t0
+	li $v0, 1
+	syscall
+	
+	# PRINT _STR4
+	la $a0, STRING__STR4
+	li $v0, 4
+	syscall
+	
+	# RETURN 0
+	li $v0, 10
+	syscall
+	
+	jr $ra
+	
+	# function one
+	# LABEL one:
+	one:
+	
+	# RETURN 1
+	li $v0, 1
+	jr $ra
+	
+	jr $ra
+	
+	# function one2
+	# LABEL one2:
+	one2:
+	
+	# DEF PARAM i@<1,2>
+	lw $v1, 0($sp)
+	
+	# #T0 = 2 MUL i@<1,2>
+	sll $a2, $v1, 1
+	
+	# #T1 = #T0 ADD 1
+	addiu $a2, $a2, 1
+	
+	# #T2 = i@<1,2> GT #T1
+	sgt $a2, $v1, $a2
+	
+	# BRANCH EQ END_IF_0 #T2
+	beq $a2, $zero, END_IF_0
+	
+	# LABEL IF_THEN_1:
+	IF_THEN_1:
+	
+	# RETURN i@<1,2>
+	move $v0, $v1
+	jr $ra
+	
+	# JUMP END_IF_0
+	
+	# LABEL END_IF_0:
+	END_IF_0:
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T3
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $ra, -4($sp)
+	move $a3, $v0
+	
+	# END CALL one
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T4
+	sw $a3, 12($sp)
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $a3, 12($sp)
+	lw $ra, -4($sp)
+	move $a2, $v0
+	
+	# END CALL one
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T5
+	sw $a2, 16($sp)
+	sw $a3, 12($sp)
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $a2, 16($sp)
+	lw $a3, 12($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# #T6 = #T4 DIV #T5
+	div $a2, $v1
+	mflo $v1
+	
+	# #T7 = #T3 ADD #T6
+	addu $a2, $a3, $v1
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T8
+	sw $a2, 28($sp)
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $a2, 28($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# #T9 = #T7 SUB #T8
+	subu $v1, $a2, $v1
+	
+	# RETURN #T9
+	move $v0, $v1
+	jr $ra
+	
+	jr $ra
+	
+	# function tRue
+	# LABEL tRue:
+	tRue:
+	
+	# DECLARE_VAR n@<1,3>
+	
+	# n@<1,3> = -99
+	li $a2, -99
+	
+	# JUMP COND_2
+	
+	# LABEL COND_2:
+	COND_2:
+	
+	# LABEL END_COND_3:
+	END_COND_3:
+	
+	# JUMP LOOP_BODY_4
+	
+	# LABEL LOOP_BODY_4:
+	LOOP_BODY_4:
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T10
+	sw $a2, 0($sp)
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $a2, 0($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# #T11 = n@<1,3> LT #T10
+	slt $v1, $a2, $v1
+	
+	# BRANCH EQ IF_ELSE_9 #T11
+	beq $v1, $zero, IF_ELSE_9
+	
+	# LABEL IF_THEN_8:
+	IF_THEN_8:
+	
+	# n@<1,3> = n@<1,3> ADD 1
+	addiu $a2, $a2, 1
+	
+	# JUMP END_IF_7
+	j END_IF_7
+	
+	# LABEL IF_ELSE_9:
+	IF_ELSE_9:
+	
+	# RETURN n@<1,3>
+	move $v0, $a2
+	jr $ra
+	
+	# JUMP END_IF_7
+	
+	# LABEL END_IF_7:
+	END_IF_7:
+	
+	# JUMP WHILE_5
+	
+	# LABEL WHILE_5:
+	WHILE_5:
+	
+	# JUMP LOOP_BODY_4
+	j LOOP_BODY_4
+	
+	# JUMP COND_10
+	
+	# LABEL COND_10:
+	COND_10:
+	
+	# LABEL END_COND_11:
+	END_COND_11:
+	
+	# JUMP LOOP_BODY_12
+	
+	# LABEL LOOP_BODY_12:
+	LOOP_BODY_12:
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T13
+	sw $a2, 0($sp)
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $a2, 0($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# BEGIN CALL one2
+	
+	sw $ra, -4($sp)
+	# PUSH #T13
+	sw $v1, -48($sp)
+	
+	# CALL one2 RET #T14
+	sw $a2, 0($sp)
+	addiu $sp, $sp, -48
+	jal one2
+	addiu $sp, $sp, 48
+	lw $a2, 0($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL one2
+	
+	# #T15 = n@<1,3> LT #T14
+	slt $v1, $a2, $v1
+	
+	# BRANCH EQ IF_ELSE_17 #T15
+	beq $v1, $zero, IF_ELSE_17
+	
+	# LABEL IF_THEN_16:
+	IF_THEN_16:
+	
+	# n@<1,3> = n@<1,3> ADD 1
+	addiu $a2, $a2, 1
+	
+	# JUMP END_IF_15
+	j END_IF_15
+	
+	# LABEL IF_ELSE_17:
+	IF_ELSE_17:
+	
+	# JUMP END_WHILE_14
+	j END_WHILE_14
+	
+	# JUMP END_IF_15
+	
+	# LABEL END_IF_15:
+	END_IF_15:
+	
+	# JUMP WHILE_13
+	
+	# LABEL WHILE_13:
+	WHILE_13:
+	
+	# JUMP LOOP_BODY_12
+	j LOOP_BODY_12
+	
+	# LABEL END_WHILE_14:
+	END_WHILE_14:
+	
+	# JUMP COND_18
+	
+	# LABEL COND_18:
+	COND_18:
+	
+	# LABEL END_COND_19:
+	END_COND_19:
+	
+	# JUMP LOOP_BODY_20
+	
+	# LABEL LOOP_BODY_20:
+	LOOP_BODY_20:
+	
+	# BEGIN CALL one2
+	
+	sw $ra, -4($sp)
+	# PUSH n@<1,3>
+	sw $a2, -48($sp)
+	
+	# CALL one2 RET #T17
+	sw $a2, 0($sp)
+	addiu $sp, $sp, -48
+	jal one2
+	addiu $sp, $sp, 48
+	lw $a2, 0($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL one2
+	
+	# #T18 = n@<1,3> ADD #T17
+	addu $a3, $a2, $v1
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T19
+	sw $a2, 0($sp)
+	sw $a3, 52($sp)
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $a2, 0($sp)
+	lw $a3, 52($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# #T20 = #T19 ADD 1
+	addiu $v1, $v1, 1
+	
+	# BEGIN CALL one2
+	
+	sw $ra, -4($sp)
+	# PUSH #T20
+	sw $v1, -48($sp)
+	
+	# CALL one2 RET #T21
+	sw $a2, 0($sp)
+	sw $a3, 52($sp)
+	addiu $sp, $sp, -48
+	jal one2
+	addiu $sp, $sp, 48
+	lw $a2, 0($sp)
+	lw $a3, 52($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL one2
+	
+	# BEGIN CALL one2
+	
+	sw $ra, -4($sp)
+	# PUSH #T21
+	sw $v1, -48($sp)
+	
+	# CALL one2 RET #T22
+	sw $a2, 0($sp)
+	sw $a3, 52($sp)
+	addiu $sp, $sp, -48
+	jal one2
+	addiu $sp, $sp, 48
+	lw $a2, 0($sp)
+	lw $a3, 52($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL one2
+	
+	# #T23 = #T18 LT #T22
+	slt $v1, $a3, $v1
+	
+	# BRANCH EQ IF_ELSE_25 #T23
+	beq $v1, $zero, IF_ELSE_25
+	
+	# LABEL IF_THEN_24:
+	IF_THEN_24:
+	
+	# n@<1,3> = n@<1,3> ADD 1
+	addiu $a2, $a2, 1
+	
+	# JUMP END_IF_23
+	j END_IF_23
+	
+	# LABEL IF_ELSE_25:
+	IF_ELSE_25:
+	
+	# RETURN n@<1,3>
+	move $v0, $a2
+	jr $ra
+	
+	# JUMP END_IF_23
+	
+	# LABEL END_IF_23:
+	END_IF_23:
+	
+	# JUMP WHILE_21
+	
+	# LABEL WHILE_21:
+	WHILE_21:
+	
+	# JUMP LOOP_BODY_20
+	j LOOP_BODY_20
+	
+	jr $ra
+	
+	# function fAlse
+	# LABEL fAlse:
+	fAlse:
+	
+	# DECLARE_VAR x@<1,4>
+	
+	# BEGIN CALL tRue
+	
+	sw $ra, -4($sp)
+	# CALL tRue RET #T25
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $ra, -4($sp)
+	move $a2, $v0
+	
+	# END CALL tRue
+	
+	# x@<1,4> = #T25
+	move $a2, $a2
+	
+	# JUMP COND_26
+	
+	# LABEL COND_26:
+	COND_26:
+	
+	# LABEL END_COND_27:
+	END_COND_27:
+	
+	# JUMP LOOP_BODY_28
+	
+	# LABEL LOOP_BODY_28:
+	LOOP_BODY_28:
+	
+	# BEGIN CALL tRue
+	
+	sw $ra, -4($sp)
+	# CALL tRue RET #T26
+	sw $a2, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $a2, 0($sp)
+	lw $ra, -4($sp)
+	move $a3, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL tRue
+	
+	sw $ra, -4($sp)
+	# CALL tRue RET #T27
+	sw $a2, 0($sp)
+	sw $a3, 16($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $a2, 0($sp)
+	lw $a3, 16($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# #T28 = #T26 MUL #T27
+	mul $v1, $a3, $v1
+	
+	# x@<1,4> = x@<1,4> ADD #T28
+	addu $a2, $a2, $v1
+	
+	# PRINT x@<1,4>
+	move $a0, $a2
+	li $v0, 1
+	syscall
+	
+	# PRINT _STR0
+	la $a0, STRING__STR0
+	li $v0, 4
+	syscall
+	
+	# #T30 = x@<1,4> GT 48
+	sgt $v1, $a2, 48
+	
+	# BRANCH EQ END_IF_31 #T30
+	beq $v1, $zero, END_IF_31
+	
+	# LABEL IF_THEN_32:
+	IF_THEN_32:
+	
+	# JUMP END_WHILE_30
+	j END_WHILE_30
+	
+	# JUMP END_IF_31
+	
+	# LABEL END_IF_31:
+	END_IF_31:
+	
+	# JUMP WHILE_29
+	
+	# LABEL WHILE_29:
+	WHILE_29:
+	
+	# JUMP LOOP_BODY_28
+	j LOOP_BODY_28
+	
+	# LABEL END_WHILE_30:
+	END_WHILE_30:
+	
+	# BEGIN CALL tRue
+	
+	sw $ra, -4($sp)
+	# CALL tRue RET #T31
+	sw $a2, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $a2, 0($sp)
+	lw $ra, -4($sp)
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# #T32 = x@<1,4> MOD #T31
+	div $a2, $v1
+	mfhi $a2
+	
+	# RETURN #T32
+	move $v0, $a2
+	jr $ra
+	
+	jr $ra
+

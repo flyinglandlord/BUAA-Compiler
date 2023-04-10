@@ -1,0 +1,161 @@
+GLOBAL_VAR_DECL:
+DECLARE_VAR a@<0,0> = 0
+DECLARE_VAR b@<0,0> = 0
+DECLARE_VAR c@<0,0> = 0
+DECLARE_VAR d@<0,0> = 0
+DECLARE_VAR e@<0,0> = 0
+DECLARE_VAR i@<0,0> = 0
+
+FUNCTIONS:
+func0
+LABEL func0:
+DEF PARAM a@<1,1>
+DEF PARAM b@<1,1>
+DECLARE_VAR i@<1,1>
+i@<1,1> = 0
+DECLARE_VAR c@<1,1>
+c@<1,1> = 128
+#T0 = a@<1,1> ADD b@<1,1>
+#T1 = #T0 MOD c@<1,1>
+RETURN #T1
+
+func1
+LABEL func1:
+DEF PARAM a@<1,2>
+#T2 = i@<0,0> ADD 1
+i@<0,0> = #T2
+RETURN i@<0,0>
+
+func2
+LABEL func2:
+DEF PARAM a@<1,3>
+DEF PARAM b@<1,3>
+#T3 = a@<1,3> MOD b@<1,3>
+#T4 = #T3 EQ 0
+BRANCH EQ END_IF_0 #T4
+LABEL IF_THEN_1:
+RETURN 1
+JUMP END_IF_0
+LABEL END_IF_0:
+RETURN 0
+
+main
+LABEL main:
+DECLARE_VAR i@<1,5>
+i@<1,5> = 0
+a@<0,0> = GETINT
+b@<0,0> = GETINT
+c@<0,0> = GETINT
+d@<0,0> = GETINT
+e@<0,0> = GETINT
+i@<1,5> = GETINT
+PRINT _STR4
+PRINT i@<1,5>
+PRINT _STR5
+BEGIN CALL func3
+CALL func3 RET #T45
+END CALL func3
+PRINT #T45
+PRINT _STR6
+RETURN 0
+
+func3
+LABEL func3:
+PRINT _STR0
+PRINT i@<0,0>
+PRINT _STR1
+DECLARE_VAR tt0@<1,4>
+DECLARE_VAR tt1@<1,4>
+DECLARE_VAR t2@<1,4>
+DECLARE_VAR tt3@<1,4>
+DECLARE_VAR tt4@<1,4>
+DECLARE_VAR v@<1,4>
+v@<1,4> = 1906
+JUMP COND_2
+LABEL COND_2:
+#T5 = i@<0,0> LT 10000
+BRANCH EQ END_WHILE_6 #T5
+LABEL END_COND_3:
+JUMP LOOP_BODY_4
+LABEL LOOP_BODY_4:
+DECLARE_VAR v@<2,2>
+#T6 = a@<0,0> MUL 4
+#T7 = #T6 MUL 32
+#T8 = #T7 MUL a@<0,0>
+#T9 = #T8 DIV a@<0,0>
+#T10 = #T9 DIV 32
+v@<2,2> = #T10
+BEGIN CALL func0
+PUSH b@<0,0>
+PUSH v@<2,2>
+CALL func0 RET #T11
+END CALL func0
+b@<0,0> = #T11
+#T12 = a@<0,0> MUL 4
+#T13 = #T12 ADD b@<0,0>
+#T14 = #T13 ADD c@<0,0>
+tt0@<1,4> = #T14
+#T15 = a@<0,0> MUL 4
+#T16 = #T15 ADD b@<0,0>
+#T17 = #T16 ADD c@<0,0>
+#T18 = #T17 ADD d@<0,0>
+tt1@<1,4> = #T18
+#T19 = a@<0,0> MUL 4
+#T20 = #T19 ADD b@<0,0>
+#T21 = #T20 ADD c@<0,0>
+#T22 = #T21 ADD d@<0,0>
+#T23 = #T22 ADD e@<0,0>
+t2@<1,4> = #T23
+#T24 = a@<0,0> MUL 4
+#T25 = #T24 ADD b@<0,0>
+#T26 = #T25 ADD c@<0,0>
+#T27 = #T26 ADD d@<0,0>
+#T28 = #T27 ADD e@<0,0>
+tt3@<1,4> = #T28
+#T29 = a@<0,0> MUL 4
+#T30 = #T29 ADD b@<0,0>
+#T31 = #T30 ADD c@<0,0>
+#T32 = #T31 ADD d@<0,0>
+#T33 = #T32 ADD e@<0,0>
+tt4@<1,4> = #T33
+BEGIN CALL func2
+PUSH i@<0,0>
+PUSH 1000
+CALL func2 RET #T34
+END CALL func2
+BRANCH EQ END_IF_7 #T34
+LABEL IF_THEN_8:
+#T35 = tt0@<1,4> ADD tt1@<1,4>
+#T36 = #T35 ADD t2@<1,4>
+#T37 = #T36 ADD tt3@<1,4>
+#T38 = #T37 ADD tt4@<1,4>
+PRINT _STR2
+PRINT #T38
+PRINT _STR3
+JUMP END_IF_7
+LABEL END_IF_7:
+BEGIN CALL func1
+PUSH i@<0,0>
+CALL func1 RET #T39
+END CALL func1
+JUMP WHILE_5
+LABEL WHILE_5:
+#T40 = i@<0,0> LT 10000
+BRANCH NE LOOP_BODY_4 #T40
+LABEL END_WHILE_6:
+#T41 = tt0@<1,4> ADD tt1@<1,4>
+#T42 = #T41 ADD t2@<1,4>
+#T43 = #T42 ADD tt3@<1,4>
+#T44 = #T43 ADD tt4@<1,4>
+RETURN #T44
+
+
+GLOBAL_STRINGS:
+_STR2 = sum = 
+_STR5 = \n
+_STR6 = \n
+_STR0 = glo_i = 
+_STR4 = main_i = 
+_STR1 = \n
+_STR3 = \n
+

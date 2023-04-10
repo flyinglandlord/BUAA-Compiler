@@ -1,0 +1,1212 @@
+.data
+STRING__STR1:
+	.asciiz "\n"
+STRING__STR4:
+	.asciiz "\n"
+STRING__STR0:
+	.asciiz "\n"
+STRING__STR3:
+	.asciiz "\n"
+STRING__STR2:
+	.asciiz "\n"
+
+
+
+.text
+	addiu $gp, $gp, 12
+	li $v0, 1
+	sw $v0, -12($gp)
+	addiu $sp, $sp, -164
+	
+	# function main
+	# LABEL main:
+	main:
+	
+	# DECLARE_VAR x@<1,5>
+	# Alloc register: $v1 for x
+	
+	# x@<1,5> = GETINT
+	li $v0, 5
+	syscall
+	move $v1, $v0
+	
+	# JUMP COND_33
+	sw $v1, 0($sp)
+	
+	# LABEL COND_33:
+	COND_33:
+	
+	# #T33 = x@<1,5> MOD 100005
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for x
+	# Alloc register: $a2 for #T33
+	li $v0, -1480358259
+	mult $v1, $v0
+	mfhi $v0
+	addu $v0, $v0, $v1
+	sra $a1, $v0, 16
+	sra $v0, $v1, 31
+	subu $a2, $a1, $v0
+	mul $a2, $a2, 100005
+	subu $a2, $v1, $a2
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T34
+	sw $a2, 4($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	# Alloc register: $v1 for #T34
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T35
+	sw $v1, 16($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	# Alloc register: $v1 for #T35
+	move $v1, $v0
+	
+	# END CALL fAlse
+	
+	# #T36 = #T34 ADD #T35
+	lw $a2, 16($sp)
+	# Alloc register: $a2 for #T34
+	# Free register: $a2 for #T34
+	# Free register: $v1 for #T35
+	# Alloc register: $v1 for #T36
+	addu $v1, $a2, $v1
+	
+	# #T37 = #T33 LT #T36
+	lw $a2, 4($sp)
+	# Alloc register: $a2 for #T33
+	# Free register: $a2 for #T33
+	# Free register: $v1 for #T36
+	# Alloc register: $v1 for #T37
+	slt $v1, $a2, $v1
+	
+	# BRANCH EQ END_WHILE_37 #T37
+	# Free register: $v1 for #T37
+	beq $v1, $zero, END_WHILE_37
+	
+	# LABEL END_COND_34:
+	END_COND_34:
+	
+	# JUMP LOOP_BODY_35
+	
+	# LABEL LOOP_BODY_35:
+	LOOP_BODY_35:
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T38
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	# Alloc register: $v1 for #T38
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# PRINT #T38
+	# Free register: $v1 for #T38
+	move $a0, $v1
+	li $v0, 1
+	syscall
+	
+	# PRINT _STR1
+	la $a0, STRING__STR1
+	li $v0, 4
+	syscall
+	
+	# #T39 = x@<1,5> ADD 100
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for x
+	# Alloc register: $a2 for #T39
+	addiu $a2, $v1, 100
+	
+	# x@<1,5> = #T39
+	# Free register: $a2 for #T39
+	move $v1, $a2
+	
+	# JUMP COND_38
+	sw $v1, 0($sp)
+	
+	# LABEL COND_38:
+	COND_38:
+	
+	# #T40 = x@<1,5> DIV 100005
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for x
+	# Alloc register: $a2 for #T40
+	li $v0, -1480358259
+	mult $v1, $v0
+	mfhi $v0
+	addu $v0, $v0, $v1
+	sra $a1, $v0, 16
+	sra $v0, $v1, 31
+	subu $a2, $a1, $v0
+	
+	# #T41 = #T40 ADD 100005
+	# Alloc register: $a3 for #T41
+	# Free register: $a2 for #T40
+	addiu $a3, $a2, 100005
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T42
+	sw $a3, 92($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	# Alloc register: $v1 for #T42
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T43
+	sw $v1, 84($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	# Alloc register: $v1 for #T43
+	move $v1, $v0
+	
+	# END CALL fAlse
+	
+	# #T44 = #T42 ADD #T43
+	lw $a2, 84($sp)
+	# Alloc register: $a2 for #T42
+	# Free register: $a2 for #T42
+	# Free register: $v1 for #T43
+	# Alloc register: $v1 for #T44
+	addu $v1, $a2, $v1
+	
+	# #T45 = #T41 LT #T44
+	lw $a2, 92($sp)
+	# Alloc register: $a2 for #T41
+	# Free register: $a2 for #T41
+	# Free register: $v1 for #T44
+	# Alloc register: $v1 for #T45
+	slt $v1, $a2, $v1
+	
+	# BRANCH EQ END_WHILE_42 #T45
+	# Free register: $v1 for #T45
+	beq $v1, $zero, END_WHILE_42
+	
+	# LABEL END_COND_39:
+	END_COND_39:
+	
+	# JUMP LOOP_BODY_40
+	
+	# LABEL LOOP_BODY_40:
+	LOOP_BODY_40:
+	
+	# #T46 = x@<1,5> SUB 1
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for x
+	# Alloc register: $a2 for #T46
+	addiu $a2, $v1, -1
+	
+	# x@<1,5> = #T46
+	# Free register: $a2 for #T46
+	move $v1, $a2
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T47
+	sw $v1, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	# Alloc register: $v1 for #T47
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# #T48 = #T47 ADD x@<1,5>
+	lw $a2, 0($sp)
+	# Alloc register: $a2 for x
+	# Free register: $v1 for #T47
+	# Alloc register: $v1 for #T48
+	addu $v1, $v1, $a2
+	
+	# PRINT #T48
+	# Free register: $v1 for #T48
+	move $a0, $v1
+	li $v0, 1
+	syscall
+	
+	# PRINT _STR2
+	la $a0, STRING__STR2
+	li $v0, 4
+	syscall
+	
+	# JUMP COND_43
+	
+	# LABEL COND_43:
+	COND_43:
+	
+	# #T49 = x@<1,5> DIV 100005
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for x
+	# Alloc register: $a2 for #T49
+	li $v0, -1480358259
+	mult $v1, $v0
+	mfhi $v0
+	addu $v0, $v0, $v1
+	sra $a1, $v0, 16
+	sra $v0, $v1, 31
+	subu $a2, $a1, $v0
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T50
+	sw $a2, 124($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	# Alloc register: $v1 for #T50
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T51
+	sw $v1, 136($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	# Alloc register: $v1 for #T51
+	move $v1, $v0
+	
+	# END CALL fAlse
+	
+	# #T52 = #T50 ADD #T51
+	lw $a2, 136($sp)
+	# Alloc register: $a2 for #T50
+	# Free register: $a2 for #T50
+	# Free register: $v1 for #T51
+	# Alloc register: $v1 for #T52
+	addu $v1, $a2, $v1
+	
+	# #T53 = #T49 LT #T52
+	lw $a2, 124($sp)
+	# Alloc register: $a2 for #T49
+	# Free register: $a2 for #T49
+	# Free register: $v1 for #T52
+	# Alloc register: $v1 for #T53
+	slt $v1, $a2, $v1
+	
+	# BRANCH EQ END_WHILE_47 #T53
+	# Free register: $v1 for #T53
+	beq $v1, $zero, END_WHILE_47
+	
+	# LABEL END_COND_44:
+	END_COND_44:
+	
+	# JUMP LOOP_BODY_45
+	
+	# LABEL LOOP_BODY_45:
+	LOOP_BODY_45:
+	
+	# #T54 = x@<1,5> SUB 1
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for x
+	# Alloc register: $a2 for #T54
+	addiu $a2, $v1, -1
+	
+	# x@<1,5> = #T54
+	# Free register: $a2 for #T54
+	move $v1, $a2
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T55
+	sw $v1, 0($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	# Alloc register: $v1 for #T55
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# #T56 = #T55 ADD x@<1,5>
+	lw $a2, 0($sp)
+	# Alloc register: $a2 for x
+	# Free register: $v1 for #T55
+	# Alloc register: $v1 for #T56
+	addu $v1, $v1, $a2
+	
+	# PRINT #T56
+	# Free register: $v1 for #T56
+	move $a0, $v1
+	li $v0, 1
+	syscall
+	
+	# PRINT _STR3
+	la $a0, STRING__STR3
+	li $v0, 4
+	syscall
+	
+	# JUMP WHILE_46
+	
+	# LABEL WHILE_46:
+	WHILE_46:
+	
+	# #T57 = x@<1,5> DIV 100005
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for x
+	# Alloc register: $a2 for #T57
+	li $v0, -1480358259
+	mult $v1, $v0
+	mfhi $v0
+	addu $v0, $v0, $v1
+	sra $a1, $v0, 16
+	sra $v0, $v1, 31
+	subu $a2, $a1, $v0
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T58
+	sw $a2, 104($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	# Alloc register: $v1 for #T58
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T59
+	sw $v1, 120($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	# Alloc register: $v1 for #T59
+	move $v1, $v0
+	
+	# END CALL fAlse
+	
+	# #T60 = #T58 ADD #T59
+	lw $a2, 120($sp)
+	# Alloc register: $a2 for #T58
+	# Free register: $a2 for #T58
+	# Free register: $v1 for #T59
+	# Alloc register: $v1 for #T60
+	addu $v1, $a2, $v1
+	
+	# #T61 = #T57 LT #T60
+	lw $a2, 104($sp)
+	# Alloc register: $a2 for #T57
+	# Free register: $a2 for #T57
+	# Free register: $v1 for #T60
+	# Alloc register: $v1 for #T61
+	slt $v1, $a2, $v1
+	
+	# BRANCH NE LOOP_BODY_45 #T61
+	# Free register: $v1 for #T61
+	bne $v1, $zero, LOOP_BODY_45
+	
+	# LABEL END_WHILE_47:
+	END_WHILE_47:
+	
+	# JUMP WHILE_41
+	
+	# LABEL WHILE_41:
+	WHILE_41:
+	
+	# #T62 = x@<1,5> DIV 100005
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for x
+	# Alloc register: $a2 for #T62
+	li $v0, -1480358259
+	mult $v1, $v0
+	mfhi $v0
+	addu $v0, $v0, $v1
+	sra $a1, $v0, 16
+	sra $v0, $v1, 31
+	subu $a2, $a1, $v0
+	
+	# #T63 = #T62 ADD 100005
+	# Alloc register: $a3 for #T63
+	# Free register: $a2 for #T62
+	addiu $a3, $a2, 100005
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T64
+	sw $a3, 96($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	# Alloc register: $v1 for #T64
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T65
+	sw $v1, 88($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	# Alloc register: $v1 for #T65
+	move $v1, $v0
+	
+	# END CALL fAlse
+	
+	# #T66 = #T64 ADD #T65
+	lw $a2, 88($sp)
+	# Alloc register: $a2 for #T64
+	# Free register: $a2 for #T64
+	# Free register: $v1 for #T65
+	# Alloc register: $v1 for #T66
+	addu $v1, $a2, $v1
+	
+	# #T67 = #T63 LT #T66
+	lw $a2, 96($sp)
+	# Alloc register: $a2 for #T63
+	# Free register: $a2 for #T63
+	# Free register: $v1 for #T66
+	# Alloc register: $v1 for #T67
+	slt $v1, $a2, $v1
+	
+	# BRANCH NE LOOP_BODY_40 #T67
+	# Free register: $v1 for #T67
+	bne $v1, $zero, LOOP_BODY_40
+	
+	# LABEL END_WHILE_42:
+	END_WHILE_42:
+	
+	# JUMP WHILE_36
+	
+	# LABEL WHILE_36:
+	WHILE_36:
+	
+	# #T68 = x@<1,5> MOD 100005
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for x
+	# Alloc register: $a2 for #T68
+	li $v0, -1480358259
+	mult $v1, $v0
+	mfhi $v0
+	addu $v0, $v0, $v1
+	sra $a1, $v0, 16
+	sra $v0, $v1, 31
+	subu $a2, $a1, $v0
+	mul $a2, $a2, 100005
+	subu $a2, $v1, $a2
+	
+	# BEGIN CALL tRue
+	
+	# CALL tRue RET #T69
+	sw $a2, 12($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	# Alloc register: $v1 for #T69
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL fAlse
+	
+	# CALL fAlse RET #T70
+	sw $v1, 28($sp)
+	addiu $sp, $sp, -40
+	jal fAlse
+	addiu $sp, $sp, 40
+	# Alloc register: $v1 for #T70
+	move $v1, $v0
+	
+	# END CALL fAlse
+	
+	# #T71 = #T69 ADD #T70
+	lw $a2, 28($sp)
+	# Alloc register: $a2 for #T69
+	# Free register: $a2 for #T69
+	# Free register: $v1 for #T70
+	# Alloc register: $v1 for #T71
+	addu $v1, $a2, $v1
+	
+	# #T72 = #T68 LT #T71
+	lw $a2, 12($sp)
+	# Alloc register: $a2 for #T68
+	# Free register: $a2 for #T68
+	# Free register: $v1 for #T71
+	# Alloc register: $v1 for #T72
+	slt $v1, $a2, $v1
+	
+	# BRANCH NE LOOP_BODY_35 #T72
+	# Free register: $v1 for #T72
+	bne $v1, $zero, LOOP_BODY_35
+	
+	# LABEL END_WHILE_37:
+	END_WHILE_37:
+	
+	# PRINT x@<1,5>
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for x
+	move $a0, $v1
+	li $v0, 1
+	syscall
+	
+	# PRINT _STR4
+	la $a0, STRING__STR4
+	li $v0, 4
+	syscall
+	
+	# RETURN 0
+	li $v0, 10
+	syscall
+	
+	jr $ra
+	
+	# function one
+	# LABEL one:
+	one:
+	
+	# RETURN 1
+	li $v0, 1
+	jr $ra
+	
+	jr $ra
+	
+	# function one2
+	# LABEL one2:
+	one2:
+	
+	# DEF PARAM i@<1,2>
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for i
+	
+	# #T0 = 2 MUL i@<1,2>
+	# Alloc register: $a2 for #T0
+	sll $a2, $v1, 1
+	
+	# #T1 = #T0 ADD 1
+	# Alloc register: $a3 for #T1
+	# Free register: $a2 for #T0
+	addiu $a3, $a2, 1
+	
+	# #T2 = i@<1,2> GT #T1
+	# Free register: $a3 for #T1
+	# Alloc register: $a2 for #T2
+	sgt $a2, $v1, $a3
+	
+	# BRANCH EQ END_IF_0 #T2
+	# Free register: $a2 for #T2
+	beq $a2, $zero, END_IF_0
+	
+	# LABEL IF_THEN_1:
+	IF_THEN_1:
+	
+	# RETURN i@<1,2>
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for i
+	move $v0, $v1
+	jr $ra
+	
+	# JUMP END_IF_0
+	
+	# LABEL END_IF_0:
+	END_IF_0:
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T3
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T3
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T4
+	sw $v1, 12($sp)
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T4
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T5
+	sw $v1, 16($sp)
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T5
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# #T6 = #T4 DIV #T5
+	lw $a2, 16($sp)
+	# Alloc register: $a2 for #T4
+	# Free register: $a2 for #T4
+	# Free register: $v1 for #T5
+	# Alloc register: $v1 for #T6
+	div $a2, $v1
+	mflo $v1
+	
+	# #T7 = #T3 ADD #T6
+	lw $a2, 12($sp)
+	# Alloc register: $a2 for #T3
+	# Free register: $a2 for #T3
+	# Free register: $v1 for #T6
+	# Alloc register: $v1 for #T7
+	addu $v1, $a2, $v1
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T8
+	sw $v1, 28($sp)
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T8
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# #T9 = #T7 SUB #T8
+	lw $a2, 28($sp)
+	# Alloc register: $a2 for #T7
+	# Free register: $a2 for #T7
+	# Free register: $v1 for #T8
+	# Alloc register: $v1 for #T9
+	subu $v1, $a2, $v1
+	
+	# RETURN #T9
+	# Free register: $v1 for #T9
+	move $v0, $v1
+	jr $ra
+	
+	jr $ra
+	
+	# function tRue
+	# LABEL tRue:
+	tRue:
+	
+	# DECLARE_VAR n@<1,3>
+	# Alloc register: $v1 for n
+	
+	# n@<1,3> = -99
+	li $v1, -99
+	
+	# JUMP COND_2
+	sw $v1, 0($sp)
+	
+	# LABEL COND_2:
+	COND_2:
+	
+	# BRANCH EQ END_WHILE_6 1
+	
+	# LABEL END_COND_3:
+	END_COND_3:
+	
+	# JUMP LOOP_BODY_4
+	
+	# LABEL LOOP_BODY_4:
+	LOOP_BODY_4:
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T10
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T10
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# #T11 = n@<1,3> LT #T10
+	lw $a2, 0($sp)
+	# Alloc register: $a2 for n
+	# Free register: $v1 for #T10
+	# Alloc register: $v1 for #T11
+	slt $v1, $a2, $v1
+	
+	# BRANCH EQ IF_ELSE_9 #T11
+	# Free register: $v1 for #T11
+	beq $v1, $zero, IF_ELSE_9
+	
+	# LABEL IF_THEN_8:
+	IF_THEN_8:
+	
+	# #T12 = n@<1,3> ADD 1
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for n
+	# Alloc register: $a2 for #T12
+	addiu $a2, $v1, 1
+	
+	# n@<1,3> = #T12
+	# Free register: $a2 for #T12
+	move $v1, $a2
+	
+	# JUMP END_IF_7
+	sw $v1, 0($sp)
+	j END_IF_7
+	
+	# LABEL IF_ELSE_9:
+	IF_ELSE_9:
+	
+	# RETURN n@<1,3>
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for n
+	move $v0, $v1
+	jr $ra
+	
+	# JUMP END_IF_7
+	
+	# LABEL END_IF_7:
+	END_IF_7:
+	
+	# JUMP WHILE_5
+	
+	# LABEL WHILE_5:
+	WHILE_5:
+	
+	# BRANCH NE LOOP_BODY_4 1
+	j LOOP_BODY_4
+	
+	# LABEL END_WHILE_6:
+	END_WHILE_6:
+	
+	# JUMP COND_10
+	
+	# LABEL COND_10:
+	COND_10:
+	
+	# BRANCH EQ END_WHILE_14 1
+	
+	# LABEL END_COND_11:
+	END_COND_11:
+	
+	# JUMP LOOP_BODY_12
+	
+	# LABEL LOOP_BODY_12:
+	LOOP_BODY_12:
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T13
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T13
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# BEGIN CALL one2
+	
+	sw $ra, -4($sp)
+	# PUSH #T13
+	# Free register: $v1 for #T13
+	sw $v1, -48($sp)
+	
+	# CALL one2 RET #T14
+	addiu $sp, $sp, -48
+	jal one2
+	addiu $sp, $sp, 48
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T14
+	move $v1, $v0
+	
+	# END CALL one2
+	
+	# #T15 = n@<1,3> LT #T14
+	lw $a2, 0($sp)
+	# Alloc register: $a2 for n
+	# Free register: $v1 for #T14
+	# Alloc register: $v1 for #T15
+	slt $v1, $a2, $v1
+	
+	# BRANCH EQ IF_ELSE_17 #T15
+	# Free register: $v1 for #T15
+	beq $v1, $zero, IF_ELSE_17
+	
+	# LABEL IF_THEN_16:
+	IF_THEN_16:
+	
+	# #T16 = n@<1,3> ADD 1
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for n
+	# Alloc register: $a2 for #T16
+	addiu $a2, $v1, 1
+	
+	# n@<1,3> = #T16
+	# Free register: $a2 for #T16
+	move $v1, $a2
+	
+	# JUMP END_IF_15
+	sw $v1, 0($sp)
+	j END_IF_15
+	
+	# LABEL IF_ELSE_17:
+	IF_ELSE_17:
+	
+	# JUMP END_WHILE_14
+	j END_WHILE_14
+	
+	# JUMP END_IF_15
+	
+	# LABEL END_IF_15:
+	END_IF_15:
+	
+	# JUMP WHILE_13
+	
+	# LABEL WHILE_13:
+	WHILE_13:
+	
+	# BRANCH NE LOOP_BODY_12 1
+	j LOOP_BODY_12
+	
+	# LABEL END_WHILE_14:
+	END_WHILE_14:
+	
+	# JUMP COND_18
+	
+	# LABEL COND_18:
+	COND_18:
+	
+	# BRANCH EQ END_WHILE_22 1
+	
+	# LABEL END_COND_19:
+	END_COND_19:
+	
+	# JUMP LOOP_BODY_20
+	
+	# LABEL LOOP_BODY_20:
+	LOOP_BODY_20:
+	
+	# BEGIN CALL one2
+	
+	sw $ra, -4($sp)
+	# PUSH n@<1,3>
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for n
+	sw $v1, -48($sp)
+	
+	# CALL one2 RET #T17
+	addiu $sp, $sp, -48
+	jal one2
+	addiu $sp, $sp, 48
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T17
+	move $v1, $v0
+	
+	# END CALL one2
+	
+	# #T18 = n@<1,3> ADD #T17
+	lw $a2, 0($sp)
+	# Alloc register: $a2 for n
+	# Free register: $v1 for #T17
+	# Alloc register: $v1 for #T18
+	addu $v1, $a2, $v1
+	
+	# BEGIN CALL one
+	
+	sw $ra, -4($sp)
+	# CALL one RET #T19
+	sw $v1, 52($sp)
+	addiu $sp, $sp, -4
+	jal one
+	addiu $sp, $sp, 4
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T19
+	move $v1, $v0
+	
+	# END CALL one
+	
+	# #T20 = #T19 ADD 1
+	# Alloc register: $a2 for #T20
+	# Free register: $v1 for #T19
+	addiu $a2, $v1, 1
+	
+	# BEGIN CALL one2
+	
+	sw $ra, -4($sp)
+	# PUSH #T20
+	# Free register: $a2 for #T20
+	sw $a2, -48($sp)
+	
+	# CALL one2 RET #T21
+	addiu $sp, $sp, -48
+	jal one2
+	addiu $sp, $sp, 48
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T21
+	move $v1, $v0
+	
+	# END CALL one2
+	
+	# BEGIN CALL one2
+	
+	sw $ra, -4($sp)
+	# PUSH #T21
+	# Free register: $v1 for #T21
+	sw $v1, -48($sp)
+	
+	# CALL one2 RET #T22
+	addiu $sp, $sp, -48
+	jal one2
+	addiu $sp, $sp, 48
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T22
+	move $v1, $v0
+	
+	# END CALL one2
+	
+	# #T23 = #T18 LT #T22
+	lw $a2, 52($sp)
+	# Alloc register: $a2 for #T18
+	# Free register: $a2 for #T18
+	# Free register: $v1 for #T22
+	# Alloc register: $v1 for #T23
+	slt $v1, $a2, $v1
+	
+	# BRANCH EQ IF_ELSE_25 #T23
+	# Free register: $v1 for #T23
+	beq $v1, $zero, IF_ELSE_25
+	
+	# LABEL IF_THEN_24:
+	IF_THEN_24:
+	
+	# #T24 = n@<1,3> ADD 1
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for n
+	# Alloc register: $a2 for #T24
+	addiu $a2, $v1, 1
+	
+	# n@<1,3> = #T24
+	# Free register: $a2 for #T24
+	move $v1, $a2
+	
+	# JUMP END_IF_23
+	sw $v1, 0($sp)
+	j END_IF_23
+	
+	# LABEL IF_ELSE_25:
+	IF_ELSE_25:
+	
+	# RETURN n@<1,3>
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for n
+	move $v0, $v1
+	jr $ra
+	
+	# JUMP END_IF_23
+	
+	# LABEL END_IF_23:
+	END_IF_23:
+	
+	# JUMP WHILE_21
+	
+	# LABEL WHILE_21:
+	WHILE_21:
+	
+	# BRANCH NE LOOP_BODY_20 1
+	j LOOP_BODY_20
+	
+	# LABEL END_WHILE_22:
+	END_WHILE_22:
+	
+	# RETURN n@<1,3>
+	lw $v1, 0($sp)
+	# Alloc register: $v1 for n
+	move $v0, $v1
+	jr $ra
+	
+	jr $ra
+	
+	# function fAlse
+	# LABEL fAlse:
+	fAlse:
+	
+	# DECLARE_VAR x@<1,4>
+	# Alloc register: $v1 for x
+	
+	# BEGIN CALL tRue
+	
+	sw $ra, -4($sp)
+	# CALL tRue RET #T25
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T25
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# x@<1,4> = #T25
+	# Alloc register: $a2 for x
+	# Free register: $v1 for #T25
+	move $a2, $v1
+	
+	# JUMP COND_26
+	sw $a2, 0($sp)
+	
+	# LABEL COND_26:
+	COND_26:
+	
+	# BRANCH EQ END_WHILE_30 1
+	
+	# LABEL END_COND_27:
+	END_COND_27:
+	
+	# JUMP LOOP_BODY_28
+	
+	# LABEL LOOP_BODY_28:
+	LOOP_BODY_28:
+	
+	# BEGIN CALL tRue
+	
+	sw $ra, -4($sp)
+	# CALL tRue RET #T26
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T26
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# BEGIN CALL tRue
+	
+	sw $ra, -4($sp)
+	# CALL tRue RET #T27
+	sw $v1, 16($sp)
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T27
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# #T28 = #T26 MUL #T27
+	lw $a2, 16($sp)
+	# Alloc register: $a2 for #T26
+	# Free register: $a2 for #T26
+	# Free register: $v1 for #T27
+	# Alloc register: $v1 for #T28
+	mul $v1, $a2, $v1
+	
+	# #T29 = x@<1,4> ADD #T28
+	lw $a2, 0($sp)
+	# Alloc register: $a2 for x
+	# Free register: $v1 for #T28
+	# Alloc register: $v1 for #T29
+	addu $v1, $a2, $v1
+	
+	# x@<1,4> = #T29
+	# Free register: $v1 for #T29
+	move $a2, $v1
+	
+	# PRINT x@<1,4>
+	move $a0, $a2
+	li $v0, 1
+	syscall
+	
+	# PRINT _STR0
+	la $a0, STRING__STR0
+	li $v0, 4
+	syscall
+	
+	# #T30 = x@<1,4> GT 48
+	# Alloc register: $v1 for #T30
+	sgt $v1, $a2, 48
+	
+	# BRANCH EQ END_IF_31 #T30
+	# Free register: $v1 for #T30
+	sw $a2, 0($sp)
+	beq $v1, $zero, END_IF_31
+	
+	# LABEL IF_THEN_32:
+	IF_THEN_32:
+	
+	# JUMP END_WHILE_30
+	j END_WHILE_30
+	
+	# JUMP END_IF_31
+	
+	# LABEL END_IF_31:
+	END_IF_31:
+	
+	# JUMP WHILE_29
+	
+	# LABEL WHILE_29:
+	WHILE_29:
+	
+	# BRANCH NE LOOP_BODY_28 1
+	j LOOP_BODY_28
+	
+	# LABEL END_WHILE_30:
+	END_WHILE_30:
+	
+	# BEGIN CALL tRue
+	
+	sw $ra, -4($sp)
+	# CALL tRue RET #T31
+	addiu $sp, $sp, -68
+	jal tRue
+	addiu $sp, $sp, 68
+	lw $ra, -4($sp)
+	# Alloc register: $v1 for #T31
+	move $v1, $v0
+	
+	# END CALL tRue
+	
+	# #T32 = x@<1,4> MOD #T31
+	lw $a2, 0($sp)
+	# Alloc register: $a2 for x
+	# Free register: $v1 for #T31
+	# Alloc register: $v1 for #T32
+	div $a2, $v1
+	mfhi $v1
+	
+	# RETURN #T32
+	# Free register: $v1 for #T32
+	move $v0, $v1
+	jr $ra
+	
+	jr $ra
+
